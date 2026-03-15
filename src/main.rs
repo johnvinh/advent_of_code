@@ -1,4 +1,5 @@
 use std::fs;
+use std::io::Error;
 use regex::Regex;
 
 fn get_password(rotations: &str) -> Result<i32, &str> {
@@ -26,11 +27,16 @@ fn get_password(rotations: &str) -> Result<i32, &str> {
     Ok(num_times_at_zero)
 }
 
-fn main() -> Result<(), std::io::Error> {
+fn main() -> Result<(), Error> {
     let file_contents = fs::read_to_string("input.txt")?;
     // println!("{}", get_password(file_contents));
     if let Ok(result) = get_password(&file_contents) {
-        println!("The password is: {}", result)
+        println!("The password is: {}", result);
+        Ok(())
+    } else {
+        Err(
+            Error::new(std::io::ErrorKind::Other,
+            "Bad file input")
+        )
     }
-    Ok(())
 }
